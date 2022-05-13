@@ -1,0 +1,14 @@
+{
+  "name": "zenn_book",
+  "scripts": {
+    "create": "zenn new:article",
+    "edit": "zenn preview"
+  },
+  "author": {
+    "name": "kazuki-komori"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "zenn-cli": "^0.1.110"
+  }
+}
