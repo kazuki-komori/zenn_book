@@ -1,0 +1,15 @@
+{
+  "plugins": {},
+  "filters": {},
+  "rules": {
+    "preset-ja-technical-writing": {
+      "no-exclamation-question-mark": false,
+      "ja-no-weak-phrase": false,
+      "ja-no-mixed-period": false,
+      "ja-unnatural-alphabet": false,
+      "sentence-length": false,
+      "max-comma": false
+    },
+    "preset-jtf-style": true
+  }
+}

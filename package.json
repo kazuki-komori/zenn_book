@@ -1,8 +1,9 @@
 {
   "name": "zenn_book",
   "scripts": {
-    "create": "zenn new:article",
-    "edit": "zenn preview"
+    "create": "zenn new:article --slug",
+    "edit": "zenn preview",
+    "fix": "textlint --fix ./articles/**/*.md"
   },
   "author": {
     "name": "kazuki-komori"
@@ -10,5 +11,10 @@
   "license": "MIT",
   "dependencies": {
     "zenn-cli": "^0.1.110"
+  },
+  "devDependencies": {
+    "textlint": "^13.3.3",
+    "textlint-rule-preset-ja-technical-writing": "^8.0.0",
+    "textlint-rule-preset-jtf-style": "^2.3.13"
   }
 }
