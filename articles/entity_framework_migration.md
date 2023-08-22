@@ -5,3 +5,5 @@ type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["dotnet", "entityframework"]
 published: false
 ---
+
+# hoge
