@@ -66,7 +66,7 @@ bicep-project/
 Bicep は、各リソースをモジュールとして定義することで、リソースの再利用性を高めることができます。
 今回は、`./infra/resource` ディレクトリに各リソースを定義し、`main.bicep` で参照するようにします。
 
-# VNET の作成
+## VNET の作成
 
 まずは、VNET を作成します。`./infra/resource/vnet.bicep` を作成し、以下のように定義します。パラメータで `addressPrefix` としてアドレス空間を受け取り、再利用性を高めています。
 
