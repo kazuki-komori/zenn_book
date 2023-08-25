@@ -3,7 +3,7 @@ title: "Biep を使って Azure App Service を Private Endpoint にデプロイ
 emoji: "💪"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["azure", "bicep", "appservice"]
-published: false
+published: true
 ---
 
 # はじめに
@@ -12,6 +12,14 @@ Bicep は、宣言型の構文を使用して Azure リソースを定義する�
 今回は、Bicep を使って Azure App Service を閉域網として Private Endpoint にデプロイする方法を紹介します。
 
 https://learn.microsoft.com/ja-jp/azure/azure-resource-manager/bicep/overview
+
+# アーキテクチャ構成
+
+今回のアーキテクチャは以下のようになります。
+
+![Architecture image](/images/20230822_app_service_private_endpoint/architecture.png)
+
+App Service は、Private Endpoint としてデプロイされ、インターネットからのアクセスを拒否します。さらに、Private DNS Zone により、仮想ネットワーク内で名前解決できるようになります。
 
 # 事前準備
 
@@ -58,9 +66,9 @@ bicep-project/
 Bicep は、各リソースをモジュールとして定義することで、リソースの再利用性を高めることができます。
 今回は、`./infra/resource` ディレクトリに各リソースを定義し、`main.bicep` で参照するようにします。
 
-# 仮想ネットワークの作成
+# VNET の作成
 
-まずは、仮想ネットワークを作成します。`./infra/resource/vnet.bicep` を作成し、以下のように定義します。パラメータで `addressPrefix` としてアドレス空間を受け取り、再利用性を高めています。
+まずは、VNET を作成します。`./infra/resource/vnet.bicep` を作成し、以下のように定義します。パラメータで `addressPrefix` としてアドレス空間を受け取り、再利用性を高めています。
 
 ```bicep:./infra/resource/vnet.bicep
 param location string = resourceGroup().location
@@ -84,9 +92,9 @@ output id string = vnet.id
 
 # サブネットの作成
 
-次に、先ほど作成した VNet に紐づくサブネットを作成するモジュールを定義します。
-VNet に対して `existing` キーワードを指定し、既存の VNet の名前を指定することで、既存のリソースを参照できます。
-また、参照先の subnet で `parent` プロパティに親リソースの VNet を指定することで、親子関係を定義できます。
+次に、先ほど作成した VNET に紐づくサブネットを作成するモジュールを定義します。
+VNET に対して `existing` キーワードを指定し、既存の VNET の名前を指定することで、既存のリソースを参照できます。
+また、参照先の subnet で `parent` プロパティに親リソースの VNET を指定することで、親子関係を定義できます。
 
 ```bicep:./infra/resource/subnet.bicep
 param name string
@@ -252,8 +260,9 @@ https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/private-link/priv
 ```bicep:./infra/main.bicep
 targetScope = 'subscription'
 
-param resourceGroupName string = 'rg-bicep-private-endpoint-sample'
+param resourceGroupName string = '<リソースグループ名>'
 param location string = 'japaneast'
+param appServiceName string = '<App Service名>'
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   name: resourceGroupName
@@ -271,7 +280,7 @@ module vnet 'resource/vnet.bicep' = {
 }
 
 module appServiceSubnet 'resource/subnet.bicep' = {
-  name: 'sub-bicep-private-endpoint-sample'
+  name: 'app-service-subnet'
   scope: resourceGroup
   params: {
     name: 'subnet-app-service'
@@ -281,13 +290,13 @@ module appServiceSubnet 'resource/subnet.bicep' = {
 }
 
 module appServicePlan 'resource/app-service-plan.bicep' = {
-  name: 'ase-bicep-private-endpoint-sample'
+  name: 'app-service-plan'
   scope: resourceGroup
   params: {
-    name: 'ase-bicep-private-endpoint-sample'
+    name: 'ase-${appServiceName}'
     location: location
     sku: {
-      name: 'F1'
+      name: 'S1'
       capacity: 1
     }
     kind: 'linux'
@@ -295,10 +304,10 @@ module appServicePlan 'resource/app-service-plan.bicep' = {
 }
 
 module appService 'resource/app-service.bicep' = {
-  name: 'app-bicep-private-endpoint-sample'
+  name: 'app-service'
   scope: resourceGroup
   params: {
-    name: 'app-bicep-private-endpoint-sample'
+    name: 'app-${appServiceName}'
     location: location
     existingAppServicePlanName: appServicePlan.outputs.name
     publicNetworkAccess: 'Disabled'
@@ -326,18 +335,60 @@ module appServicePrivateEndpoint 'resource/private-endpoint.bicep' = {
 
 ```bash
 $ azd up
+
+  (✓) Done: Resource group: rg-bicep-private-endpoint-sample
+  (✓) Done: Virtual Network: vnet-private-endpoint
+  (✓) Done: App Service plan: ase-bicep-private-endpoint-sample
+  (✓) Done: App Service: app-bicep-private-endpoint-sample
+Deploying services (azd deploy)
+SUCCESS: Your application was provisioned and deployed to Azure in 2 minutes 45 seconds.
 ```
 
-
 デプロイ後、App Service の URL にブラウザからアクセスすると、403 エラーを確認できるでしょう。
+
+![403 image](/images/20230822_app_service_private_endpoint/403.png)
+
+また、Azure ポータルで作成された App Service へアクセスし、`ネットワーク` を選択すると `アクセス制限`、`プライベート エンドポイント` が `オン` になっているのが確認できます。
+
+![Alt text](/images/20230822_app_service_private_endpoint/app-service-private.png)
 
 # リソースの削除
 
 `azd down` を実行して、全てのリソースを削除します。
 ```bash
 $ azd down
+
+? Total resources to delete: 12, are you sure you want to continue? Yes
+Deleting your resources can take some time.
+
+  (✓) Done: Deleting resource group: rg-bicep-private-endpoint-sample
+
+
+SUCCESS: Your application was removed from Azure in 3 minutes 26 seconds.
 ```
 
-# おまけ：仮想マシンを作成して、App Service にアクセスする
+# おまけ：仮想マシンを作成して、App Service にアクセスしてみる
 
+App Service が仮想ネットワーク内から見られるかを確認するために、仮想マシンを作成して、App Service にアクセスしてみましょう。
+仮想マシンを作成する手順を Bicep で作成しても良かったのですが、手順が長くなるため、今回は Azure ポータルから作成します。（需要がありそうであれば、別途記事を書きます）
 
+以下のように、App Service の属しているサブネットに Windows11 仮想マシンを作成します。
+
+![app service private endpoint](/images/20230822_app_service_private_endpoint/vm.png)
+
+リモートデスクトップで仮想マシンに接続し、ブラウザから App Service の URL にアクセスすると、App Service にアクセスできることが確認できます。
+
+![app service remote desktop image](/images/20230822_app_service_private_endpoint/vm-access.png)
+
+# まとめ
+
+今回は、Bicep を使って Azure App Service を Private Endpoint にデプロイする方法を紹介しました。
+Bicep でデプロイする上で特有の変数があったりするので、イチから調査すると大変かと思います。今回の記事が少しでも参考になれば幸いです。
+
+# 参考
+
+https://learn.microsoft.com/ja-jp/azure/azure-resource-manager/bicep/overview?tabs=bicep
+
+https://learn.microsoft.com/ja-jp/azure/app-service/networking/private-endpoint
+
+https://learn.microsoft.com/ja-jp/azure/dns/private-dns-privatednszone
