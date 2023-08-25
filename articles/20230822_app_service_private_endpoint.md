@@ -90,7 +90,7 @@ output name string = vnet.name
 output id string = vnet.id
 ```
 
-# サブネットの作成
+## サブネットの作成
 
 次に、先ほど作成した VNET に紐づくサブネットを作成するモジュールを定義します。
 VNET に対して `existing` キーワードを指定し、既存の VNET の名前を指定することで、既存のリソースを参照できます。
@@ -119,7 +119,7 @@ output id string = subnet.id
 output name string = subnet.name
 ```
 
-# App Service Plan の作成
+## App Service Plan の作成
 
 App Service Plan は、App Service の実行環境を定義するリソースです。
 実行するアプリケーションの規模に応じて、サイズやインスタンス数を変更できます。
@@ -141,7 +141,7 @@ output id string = appServicePlan.id
 output name string = appServicePlan.name
 ```
 
-# App Service の作成
+## App Service の作成
 
 App Service は、Web アプリケーションや API をホストするための PaaS サービスです。
 App Service は、App Service Plan に紐づいているため、App Service Plan の名前を指定することで、App Service Plan を参照できます。
@@ -172,7 +172,7 @@ output id string = appService.id
 output name string = appService.name
 ```
 
-# Private Endpoint と private DNS Zone の作成
+## Private Endpoint と private DNS Zone の作成
 
 Private Endpoint は、Azure リソースにプライベート IP アドレスを割り当てることができるリソースです。
 Private DNS Zone は、Private Endpoint で割り当てたプライベート IP アドレスを仮想ネットワーク内で名前解決するための DNS ゾーンです。
@@ -253,7 +253,7 @@ output privateEndpointName string = privateEndpoint.name
 
 https://github.com/MicrosoftDocs/azure-docs/blob/main/articles/private-link/private-endpoint-overview.md
 
-# main.bicep に各モジュールを読み込む
+## main.bicep に各モジュールを読み込む
 
 ここまでで、各リソースの Bicep ファイルを作成できたので、main.bicep に各モジュールを読み込みます。
 
