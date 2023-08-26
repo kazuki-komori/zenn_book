@@ -176,7 +176,6 @@ output name string = appService.name
 
 Private Endpoint は、Azure リソースにプライベート IP アドレスを割り当てることができるリソースです。
 Private DNS Zone は、Private Endpoint で割り当てたプライベート IP アドレスを仮想ネットワーク内で名前解決するための DNS ゾーンです。
-また、Azure ポータルでは Private Endpoint を作成すると、Private DNS Zone が自動的に作成されますが、Bicep では Private DNS Zone を定義する必要があります。
 
 ここで、DNS Zone 名は `privatelink.{リソースがデプロイされるURL}` を指定します。
 つまり、App Service の場合、デプロイ先の URL は `azurewebsites.net` となるため、DNS Zone 名は `privatelink.azurewebsites.net` を指定します。
