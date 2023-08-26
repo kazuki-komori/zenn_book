@@ -1,5 +1,5 @@
 ---
-title: "Biep を使って Azure App Service を Private Endpoint にデプロイする方法"
+title: "Bicep を使って Azure App Service を Private Endpoint にデプロイする方法"
 emoji: "💪"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["azure", "bicep", "appservice"]
