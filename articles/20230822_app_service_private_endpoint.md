@@ -376,7 +376,7 @@ App Service が仮想ネットワーク内から見られるかを確認する�
 
 ![app service private endpoint](/images/20230822_app_service_private_endpoint/vm.png)
 
-リモートデスクトップで仮想マシンに接続し、ブラウザから App Service の URL にアクセスすると、App Service にアクセスできることが確認できます。
+リモートデスクトップで仮想マシンに接続し、ブラウザから App Service の URL にアクセスすると、App Service の初期画面が表示されるのを確認できます。
 
 ![app service remote desktop image](/images/20230822_app_service_private_endpoint/vm-access.png)
 
