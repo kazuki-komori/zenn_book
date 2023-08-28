@@ -4,6 +4,7 @@ emoji: "💪"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["azure", "bicep", "appservice"]
 published: true
+publication_name: "microsoft"
 ---
 
 # はじめに
