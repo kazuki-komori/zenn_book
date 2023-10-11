@@ -1,5 +1,5 @@
 ---
-title: "Azure OpenAI Service の Chat Completion API を JMeter と Taurus で負荷テストしてみた"
+title: "Azure OpenAI Service の Chat Completion API を JMeter で負荷テストしてみた"
 emoji: "🎃"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["azure", "openai", "jmeter", "taurus"]
