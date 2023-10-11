@@ -1,9 +1,10 @@
 ---
-title: "Azure OpenAI Service の API を JMeter で負荷テストしてみた"
+title: "Azure OpenAI Service の Chat Completion API を JMeter と Taurus で負荷テストしてみた"
 emoji: "🎃"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["azure", "openai", "jmeter", "taurus"]
 published: false
+publication_name: "microsoft"
 ---
 
 # はじめに
@@ -48,10 +49,14 @@ bzt sample-scenario.jmx -report
 
 Taurus については、[手軽に負荷テストができるツール「Taurus」がスゴい](https://zenn.dev/tonchan1216/articles/11afd147ea3dd2734315)の記事で非常に分かりやすくまとめられているので、ぜひご覧ください。
 
+https://zenn.dev/tonchan1216/articles/11afd147ea3dd2734315
+
 # 今回テストするシナリオ
 
 今回は、Azure OpenAI Service の Rest API である [Chat Completions](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/reference#chat-completions) を利用したシナリオを想定しています。
 Chat Completions はチャットにおける会話の続きを生成することを想定しているため、入力された文章に対して、会話の文脈を考慮して文章を生成してくれます。
+
+https://learn.microsoft.com/ja-jp/azure/ai-services/openai/reference#chat-completions
 
 今回テストするシナリオは以下の通りです。
 質問トークン数を変化させている意図として、質問トークン数が多いほど、返答でより長い文章を生成させるため、レスポンス時間が大きく異なると想定されます。それにより、結果が変わるのかどうかを確認したいと考えています。
