@@ -11,7 +11,8 @@
       "max-comma": false
     },
     "preset-jtf-style": {
-      "3.1.1.全角文字と半角文字の間": false
+      "3.1.1.全角文字と半角文字の間": false,
+      "4.3.7.山かっこ<>": false
     },
     "preset-ja-spacing": {
       "ja-space-between-half-and-full-width": {
