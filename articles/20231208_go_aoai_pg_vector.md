@@ -99,7 +99,7 @@ CREATE TABLE vectors (
 );
 ```
 
-## Golang アプリケーションからpostgresqlに接続する
+## PostgreSQL への接続
 
 Golang から PostgreSQL に接続するためには、以下のように `database/sql` と `github.com/lib/pq` を利用します。
 
