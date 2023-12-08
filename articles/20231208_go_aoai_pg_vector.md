@@ -7,14 +7,14 @@ published: false
 publication_name: "microsoft"
 ---
 
-この記事は、[Azure Advent Calendar 2023](https://qiita.com/advent-calendar/2023/microsoft-azure-tech) の 10 日目の記事です。
+この記事は、[Azure Advent Calendar 2023](https://qiita.com/advent-calendar/2023/microsoft-azure-tech) の 10 日目の記事です。🎄
 
 # はじめに
 
 Azure OpenAI Service では、 `text-embedding-ada-002` というモデルを使って、文章を 1536 次元のベクトルに Embedding できます。
 また、PostgreSQL では、 `pgvector` という拡張機能を使って、ベクトルを保存・検索機能を導入できます。
 
-今回は、これらを組み合わせて、Azure OpenAI で Embedding したベクトルを Golang のアプリケーションから PostgreSQL に保存し、類似度検索する方法を紹介します。
+今回はこれらを組み合わせて、Azure OpenAI で Embedding したベクトルを Golang のアプリケーションから PostgreSQL に保存し、類似度検索する方法を紹介します。
 
 https://learn.microsoft.com/ja-jp/azure/ai-services/openai/concepts/models#embeddings-models
 
