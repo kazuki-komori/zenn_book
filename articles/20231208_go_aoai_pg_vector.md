@@ -3,7 +3,8 @@ title: "【Golang】Azure OpenAI で Embedding したベクトルを使って、
 emoji: "🐘"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["postgresql", "openai", "go", "docker", "azure"]
-published: false
+published: true
+published_at: 2023-12-10 10:00
 publication_name: "microsoft"
 ---
 
