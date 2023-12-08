@@ -1,5 +1,5 @@
 ---
-title: "【Golang】Azure OpenAI で Embedding したベクトルを PostgreSQL に保存し、類似度検索する方法"
+title: "【Golang】Azure OpenAI で Embedding したベクトルを使って、自前検索エンジンを作ろう"
 emoji: "🐘"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["postgresql", "openai", "go", "docker", "azure"]
