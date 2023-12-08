@@ -1,8 +1,8 @@
 {
   "name": "zenn_book",
   "scripts": {
-    "create": "zenn new:article --slug",
-    "edit": "zenn preview",
+    "new": "zenn new:article --slug",
+    "preview": "zenn preview",
     "fix": "textlint --fix ./articles/**/*.md"
   },
   "author": {
