@@ -38,7 +38,7 @@ https://learn.microsoft.com/ja-jp/azure/batch/nodes-and-pools
 
 プールはノードに一意の IP アドレスを割り当てることができ、プール内のノードは割り当てられた IP アドレスを使用して通信をします。
 
-また、異なるプール間での通信は、Azure Virtual Network を利用して行うことができます。
+異なるプール間での通信は、Azure Virtual Network を利用する必要があります。
 
 ![プールの構成](/images/20240119_azure_batch/pool.png)
 
@@ -60,7 +60,7 @@ https://learn.microsoft.com/ja-jp/azure/batch/jobs-and-tasks#tasks
 ## ジョブ
 
 ジョブは、タスクの集合体です。
-ジョブは、タスクの最大試行回数やタイムアウト時間などを一括で指定できます。
+タスクの最大試行回数やタイムアウト時間などを一括で指定できます。
 
 https://learn.microsoft.com/ja-jp/azure/batch/jobs-and-tasks#jobs
 
@@ -244,7 +244,6 @@ if __name__ == '__main__':
 `BATCH_START_COMMANDS` には、ノードで開始タスクとして実行するコマンドを記述します。
 
 ここでは、Python 3.10 のインストールと、必要なライブラリのインストールを行っています。
-
 また、ノードの実行環境は Ubuntu 20.04 で実行するように設定しています。
 
 コードを作成したら、実行してみましょう。
@@ -371,14 +370,13 @@ if __name__ == "__main__":
 :::
 
 `BLOB_BATCH_SCRIPT_FILE_NAME` には、実行するプログラムのファイル名を指定します。
-今回は、Blob Storage に `sample.py` という名前でアップロードしているので、 `sample.py` と指定します。
+今回は、Blob Storage にアップロードした `sample.py` を指定しています。
 
 ポータルでジョブの状態を確認すると、タスクが追加され、ノードで実行されていることが確認できます。
 
 ![タスクの状態](/images/20240119_azure_batch/task_status.png)
 
 `状態` が `完了` になったら、Blob Storage に `output` コンテナを開いてみましょう。
-
 `bus.jpg` というファイルがアップロードされているはずです。
 
 ![blob output](/images/20240119_azure_batch/blob_output.png)
@@ -408,5 +406,3 @@ https://learn.microsoft.com/ja-jp/azure/batch/jobs-and-tasks
 https://github.com/ultralytics/yolov5
 
 https://pypi.org/project/azure-batch/
-
-
