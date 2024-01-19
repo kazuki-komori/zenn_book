@@ -8,7 +8,8 @@
       "ja-no-mixed-period": false,
       "ja-unnatural-alphabet": false,
       "sentence-length": false,
-      "max-comma": false
+      "max-comma": false,
+      "no-doubled-joshi": false
     },
     "preset-jtf-style": {
       "3.1.1.全角文字と半角文字の間": false,
