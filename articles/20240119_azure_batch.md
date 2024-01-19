@@ -82,9 +82,23 @@ https://learn.microsoft.com/ja-jp/azure/batch/jobs-and-tasks#jobs
 
 まずは、Azure Batch アカウントをポータルでポチポチして作成します。
 
+検索ボックスから「batch アカウント」を検索し、batch アカウントの画面を開きます。
+
+作成画面で前の手順で作成した、リソースグループ名、batch アカウント名とリージョンを指定します。
+
+その後、ストレージ アカウントの選択 をクリックし、ストレージ アカウントを作成します。
+
+![Azure Batch アカウントの作成](/images/20240119_azure_batch/create_batch_account.png)
+
+`ストレージ アカウントの選択` をクリックすると、ストレージ アカウントの作成画面が開きます。
+
+今回は新規作成を選択し、ストレージ アカウント名とリージョンを指定します。
+
+![ストレージ アカウントの作成](/images/20240119_azure_batch/create_storage_account.png)
+
 ## 実行資材の準備
 
-まずは GitHub から事前学習済みモデルをダウンロードします。
+まずは GitHub から物体検出モデル (YOLOv8) の事前学習済みモデルをダウンロードします。
 
 https://github.com/ultralytics/yolov5
 
@@ -96,6 +110,9 @@ https://github.com/ultralytics/yolov5
 
 https://github.com/ultralytics/ultralytics/blob/main/ultralytics/assets/bus.jpg
 
+![sample](/images/20240119_azure_batch/bus.jpg =300x)
+*サンプル画像*
+
 画像を Blob Storage から読み込んで、物体検出したあと、結果を Blob Storage に書き込むプログラムを `sample.py` として作成します。
 
 ```python
@@ -104,7 +121,7 @@ from azure.storage.blob import BlobServiceClient
 from ultralytics import YOLO
 
 TARGET_FILE_NAME="bus.jpg"
-CONTAINER_NAME="handson-output"
+CONTAINER_NAME="output"
 CONNECTION_STRING="<Blob ストレージの接続文字列>"
 
 def upload_to_blob():
@@ -121,13 +138,16 @@ if __name__ == "__main__":
     upload_to_blob()
 ```
 
+:::message
+python スクリプトは、実行時にターゲットの実行ファイル名を指定できるようにすることで、汎用性を高めることができます。
+今回はサンプルなので、ファイル名をプログラム内で指定していますが、実際に運用する場合は、引数で指定できるようにしておくと良いでしょう。
+:::
+
 また、 `CONNECTION_STRING` には、Blob ストレージの接続文字列を入れておきます。（本番環境ではソースコードにハードコートせず、環境変数から読み込むなど工夫してください）
 
-接続文字列は、Azure ポータルで Blob ストレージを選択し、左側のメニューから「アクセス キー」を選択すると確認できます。
-
-<!-- TODO: 画像を入れる -->
-
 資材を準備したあと、Blob Storage に `input` と `output` という名前のコンテナを作成し、`sample.py` `bus.jpg` `yolov8n.pt` を `input` コンテナにアップロードします。
+
+![blob input](/images/20240119_azure_batch/blob_input.png)
 
 ## プールの作成
 
@@ -223,7 +243,9 @@ if __name__ == '__main__':
 
 `BATCH_START_COMMANDS` には、ノードで開始タスクとして実行するコマンドを記述します。
 
-実行環境は Ubuntu 20.04 で実行するように設定しています。
+ここでは、Python 3.10 のインストールと、必要なライブラリのインストールを行っています。
+
+また、ノードの実行環境は Ubuntu 20.04 で実行するように設定しています。
 
 コードを作成したら、実行してみましょう。
 
@@ -233,7 +255,7 @@ python create_pool.py
 
 プールの作成が完了したら、プールの状態をポータルで確認してみましょう。
 
-<!-- TODO: 画像を入れる -->
+![プールの状態](/images/20240119_azure_batch/pool_status.png)
 
 
 ## ジョブの作成
@@ -289,7 +311,7 @@ python create_job.py
 
 ジョブの作成が完了したら、ジョブの状態をポータルで確認してみましょう。
 
-<!-- TODO: 画像を入れる -->
+![ジョブの状態](/images/20240119_azure_batch/job.png)
 
 ## タスクの作成
 
@@ -297,7 +319,7 @@ python create_job.py
 
 `create_task.py` を作成し、以下のコードを記述します。
 
-
+:::details create_task.py
 ```python
 import azure.batch.models as batchmodels
 import azure.batch.batch_auth as batchauth
@@ -313,7 +335,7 @@ BATCH_JOB_ID = 'job-sample-001'
 BATCH_TASK_ID = 'task-sample-001'
 
 BLOB_BATCH_SCRIPT_FILE_NAME = 'sample.py'
-BLOB_BATCH_SCRIPT_CONTAINER_NAME = 'handson-input'
+BLOB_BATCH_SCRIPT_CONTAINER_NAME = 'input'
 
 def get_batch_client() -> BatchServiceClient:
     """BatchServiceClient インスタンスを取得する"""
@@ -346,15 +368,45 @@ if __name__ == "__main__":
     batch_client = get_batch_client()
     create_task(batch_client)
 ```
+:::
 
 `BLOB_BATCH_SCRIPT_FILE_NAME` には、実行するプログラムのファイル名を指定します。
 今回は、Blob Storage に `sample.py` という名前でアップロードしているので、 `sample.py` と指定します。
 
 ポータルでジョブの状態を確認すると、タスクが追加され、ノードで実行されていることが確認できます。
 
-実行が成功したら、Blob Storage に `output` コンテナを開いてみましょう。
+![タスクの状態](/images/20240119_azure_batch/task_status.png)
+
+`状態` が `完了` になったら、Blob Storage に `output` コンテナを開いてみましょう。
 
 `bus.jpg` というファイルがアップロードされているはずです。
 
-![出力結果](/images/20240119_azure_batch/output.png)
+![blob output](/images/20240119_azure_batch/blob_output.png)
+
+ダウンロードしてみると、物体検出の結果が書き込まれていることが確認できます。
+
+![output](/images/20240119_azure_batch/output.jpg =300x)
+*出力結果*
+
+
+# まとめ
+
+今回は、Azure Batch を利用して物体検出モデル (YOLOv8) を動かしてみました。
+
+実運用する場合は、プログラムの再利用性を考慮したり、ノードのスケーリングを自動化したりするなどの工夫がさらに必要ですが、Azure Batch を利用することで大規模な並列処理を簡単に実現できます。
+
+今回の記事を通して、Azure Batch の基本的な使い方を理解していただけたら幸いです。
+
+# 参考文献
+
+https://learn.microsoft.com/ja-jp/azure/batch/batch-technical-overview
+
+https://learn.microsoft.com/ja-jp/azure/batch/nodes-and-pools
+
+https://learn.microsoft.com/ja-jp/azure/batch/jobs-and-tasks
+
+https://github.com/ultralytics/yolov5
+
+https://pypi.org/project/azure-batch/
+
 
