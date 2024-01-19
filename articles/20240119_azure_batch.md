@@ -3,7 +3,7 @@ title: "Azure Batch で物体検出モデル (YOLOv8) を動かしてみる"
 emoji: "🚌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["azure", "python", "ai", "機械学習", "物体検出"]
-published: false
+published: true
 publication_name: "microsoft"
 ---
 
