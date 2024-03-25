@@ -51,9 +51,9 @@ npx vitepress init
 {
   ...
   "scripts": {
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
   },
   ...
 }
@@ -62,7 +62,7 @@ npx vitepress init
 開発サーバーを起動して、ドキュメントを確認します。
 
 ```bash
-npm run docs:dev
+npm run dev
 ```
 
 # Azure Static Web Apps へのデプロイ
