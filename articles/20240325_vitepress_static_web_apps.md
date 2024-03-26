@@ -3,7 +3,7 @@ title: "【10分で簡単】VitePress を Azure Static Web Apps でホストし�
 emoji: "🌐"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [azure, vue, vite, staticwebapps, githubactions]
-published: false
+published: true
 publication_name: "microsoft"
 ---
 
